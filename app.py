@@ -4,8 +4,7 @@ from utils import *
 
 app = Flask(__name__)
 
-NUM_OF_CLIENTS = 2  # At least 2 as the updateParam function work only then.
-
+UPDATE_FREQ = 2  # At least 2 as the updateParam function work only then
 
 if os.path.exists('server.h5'):
     model = tf.keras.models.load_model('server.h5')
@@ -36,7 +35,7 @@ def server():
 
         client = tf.keras.models.load_model('client.h5')
         storage.append(client.get_weights())
-        if len(storage) == NUM_OF_CLIENTS:  # All the clients have given their models
+        if len(storage) == UPDATE_FREQ:  # The frequency at which the model should be updated
             res = updateParam(storage)
             model.set_weights(res)
             model.save('server.h5')
